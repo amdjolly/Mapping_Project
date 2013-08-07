@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Occupational Mapping</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="{{ STATIC_URL }}Leaflet-0.6.2/dist/leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}Leaflet-0.6.2/dist/leaflet.ie.css" /><![endif]-->
+    <script type="text/javascript" src ="http://nls.tileserver.com/api.js"></script>
+</head>
+<body>
+	<div id="map" style="width: 600px; height: 400px"></div>
+
+	<script src="{{ STATIC_URL }}Leaflet-0.6.2/dist/leaflet.js"></script>
+	<script>
+		var Shipbuilders = new L.LayerGroup();
+
+	    L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities),
+		L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities),
+		L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.').addTo(cities),
+		L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
+
+        var Unemployed = new L.LayerGroup();
+
+
+	    var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+
+	    var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
+		    midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr}),
+            motorways = L.tileLayer(cmUrl, {styleId: 46561, attribution: cmAttr}),
+            historic = L.tileLayer(NLSTileURLOS);
+            historic.getTileUrl = NLSTileURLOS;
+
+		var map = L.map('map', {
+			center: [55.86197, -4.30904],
+			zoom: 10,
+			layers: [minimal, motorways, cities, historic]
+		});
+
+		var baseLayers = {
+			"Minimal": minimal,
+			"Night View": midnight
+		};
+
+		var overlays = {
+			"Motorways": motorways,
+			"Cities": cities,
+            "NLS": historic
+		};
+
+		L.control.layers(baseLayers, overlays).addTo(map);
+	</script>
+</body>
+</html>
